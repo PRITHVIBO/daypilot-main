@@ -508,12 +508,20 @@ function gemini_chat(string $message, array $u): array {
         }
 
         if ($previous) {
-            $threadId = $thread['id'] ?? uuid();
-            $save = $pdo->prepare(
-                'INSERT INTO ai_threads(id,user_id,gemini_interaction_id,updated_at) VALUES(?,?,?,?)\n' .
-                'ON DUPLICATE KEY UPDATE gemini_interaction_id=VALUES(gemini_interaction_id),updated_at=VALUES(updated_at)'
-            );
-            $save->execute([$threadId, $u['id'], $previous, now()]);
+            $timestamp = now();
+            if ($thread && !empty($thread['id'])) {
+                $save = $pdo->prepare(
+                    'UPDATE ai_threads SET gemini_interaction_id=?, updated_at=? WHERE id=? AND user_id=?'
+                );
+                $save->execute([$previous, $timestamp, $thread['id'], $u['id']]);
+            } else {
+                $threadId = uuid();
+                $save = $pdo->prepare(
+                    'INSERT INTO ai_threads(id,user_id,gemini_interaction_id,updated_at) VALUES(?,?,?,?)'
+                );
+                $save->execute([$threadId, $u['id'], $previous, $timestamp]);
+                $thread = ['id' => $threadId, 'gemini_interaction_id' => $previous];
+            }
         }
 
         if (!$hasCall) break;
