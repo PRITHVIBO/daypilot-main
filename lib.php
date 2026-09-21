@@ -176,7 +176,7 @@ function plan_day(string $userId, string $date): array {
 }
 
 function http_json(string $url, array $headers, array $body, int $timeout = 90): array {
-    $json = json_encode($body, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+    $json = json_encode($body, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR);
     $ch = curl_init($url);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
@@ -293,7 +293,7 @@ function gemini_tools(): array {
             'type' => 'function',
             'name' => 'get_analytics',
             'description' => 'Get a concise 30-day work analytics summary.',
-            'parameters' => ['type' => 'object', 'properties' => []],
+            'parameters' => ['type' => 'object'],
         ],
         [
             'type' => 'function',
@@ -414,7 +414,7 @@ function gemini_chat(string $message, array $u): array {
         'tasks' => $tasks,
         'events' => $events,
         'notes' => array_slice($notes, 0, 10),
-    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR);
 
     $system = "You are DayPilot, a practical personal work assistant. Be concise, specific and action-oriented. "
         . "Use tools whenever a request requires reading or changing the user's workspace. "
