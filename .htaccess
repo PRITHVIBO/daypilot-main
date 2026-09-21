@@ -1,0 +1,8 @@
+Options -Indexes
+
+<FilesMatch "^(config|config\.example|config\.local|database|composer)\.(php|json|sql)$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "^\.(env|git|htaccess)">
+  Require all denied
+</FilesMatch>

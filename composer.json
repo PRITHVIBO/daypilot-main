@@ -1,0 +1,9 @@
+{
+  "name": "daypilot/daypilot",
+  "description": "DayPilot cross-device personal work assistant",
+  "type": "project",
+  "require": {
+    "php": ">=8.2",
+    "minishlink/web-push": "^11.0"
+  }
+}

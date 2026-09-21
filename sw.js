@@ -1,0 +1,7 @@
+const CACHE='daypilot-shell-v2';
+const CORE=['./','index.php','assets/app.js','assets/styles.css','manifest.webmanifest','assets/icon.svg','assets/icon-192.png','assets/icon-512.png'];
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',event=>{const req=event.request;if(req.method!=='GET')return;const url=new URL(req.url);if(url.pathname.endsWith('/api.php'))return;event.respondWith(caches.match(req).then(cached=>cached||fetch(req).then(res=>{if(res.ok&&url.origin===location.origin){const clone=res.clone();caches.open(CACHE).then(c=>c.put(req,clone));}return res;}).catch(()=>caches.match('./'))));});
+self.addEventListener('push',event=>{let data={title:'DayPilot',body:'You have a reminder.',url:'/'};try{data=event.data?.json()||data;}catch{}event.waitUntil(self.registration.showNotification(data.title,{body:data.body,icon:'/assets/icon.svg',badge:'/assets/icon.svg',data:{url:data.url||'/'},tag:'daypilot-reminder'}));});
+self.addEventListener('notificationclick',event=>{event.notification.close();const url=event.notification.data?.url||'/';event.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(list=>{for(const client of list){if('focus' in client){client.navigate(url);return client.focus();}}return clients.openWindow(url);}));});

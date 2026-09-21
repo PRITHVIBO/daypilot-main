@@ -1,0 +1,26 @@
+name: CI only (Hostinger Git deploys main)
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql,curl,openssl,mbstring
+      - name: Install Composer dependencies
+        run: composer install --no-dev --no-interaction --prefer-dist --no-progress
+      - name: Validate PHP
+        shell: bash
+        run: find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
+      - name: Validate JavaScript
+        shell: bash
+        run: find assets -name '*.js' -print0 | xargs -0 -n1 -I{} node --check "{}"
+      - name: Smoke checks
+        run: php tests/smoke.php

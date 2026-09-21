@@ -1,0 +1,7 @@
+/config.local.php
+/.env
+/vendor/
+/.idea/
+/.vscode/
+*.log
+.DS_Store

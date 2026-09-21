@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: daypilot
+      MYSQL_USER: daypilot
+      MYSQL_PASSWORD: daypilot-dev-password
+      MYSQL_ROOT_PASSWORD: root-dev-password
+    volumes:
+      - daypilot_db:/var/lib/mysql
+      - ./database.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u daypilot -pdaypilot-dev-password --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  web:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: daypilot
+      DB_USER: daypilot
+      DB_PASS: daypilot-dev-password
+      AI_PROVIDER: gemini
+      GEMINI_MODEL: gemini-3.8-flash
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@example.com}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+    ports:
+      - "8081:80"
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  daypilot_db:
