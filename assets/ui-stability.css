@@ -1,0 +1,142 @@
+/* DayPilot UI stabilisation: loaded last to resolve layout override conflicts. */
+@media (min-width:821px) {
+  .app-shell > .sidebar {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar > .side-brand,
+  .sidebar > .sidebar-profile { flex: 0 0 auto; }
+  .sidebar > .nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    align-content: start;
+    scrollbar-width: thin;
+    scrollbar-color: #829a86 transparent;
+    padding: 4px 2px 9px;
+  }
+  .sidebar > .sidebar-bottom {
+    flex: 0 0 auto;
+    margin-top: 0;
+    padding: 9px 0 max(9px, env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid rgba(255,255,255,.13);
+    background: #1e3028;
+  }
+  .sidebar #logoutBtn {
+    display: block;
+    width: 100%;
+    min-height: 43px;
+    border: 1px solid rgba(255,255,255,.2);
+    background: #31473b;
+    color: #fff;
+    border-radius: 8px;
+  }
+  .sidebar #logoutBtn:hover { background: #415c4a; }
+}
+/* Settings: avoid stretching every card to the height of the reminders history. */
+#viewSettings .settings-grid {
+  align-items: start;
+  grid-auto-rows: min-content;
+}
+#viewSettings .settings-grid > .panel { min-width: 0; }
+#viewSettings .settings-account-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px 20px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+#viewSettings .settings-account-panel > div { min-width: 0; flex: 1 1 260px; }
+#viewSettings .settings-account-panel h2 {
+  font-size: 17px; line-height: 1.4; margin: 4px 0 0;
+}
+#viewSettings .settings-account-panel p {
+  margin: 5px 0 0;
+  line-height: 1.5;
+  font-size: 12px;
+}
+#viewSettings #settingsLogoutBtn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 110px;
+  min-height: 42px;
+  margin: 0;
+  padding: 10px 16px;
+  border: 1px solid #d2ddce;
+  border-radius: 8px;
+  background: #eef2e8;
+  color: #334e3a;
+  font-size: 13px;
+  font-weight: 600;
+}
+#viewSettings #settingsLogoutBtn:hover { background: #dee9d6; }
+/* Reminder history must never concatenate title and date or widen the card. */
+#viewSettings #reminderList {
+  display: grid;
+  align-content: start;
+  gap: 0;
+  margin-top: 15px;
+  max-height: min(38vh, 360px);
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+#viewSettings #reminderList .list-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 12px 0;
+  min-width: 0;
+  border-bottom: 1px solid var(--line);
+}
+#viewSettings #reminderList .list-row:last-child { border-bottom: 0; }
+#viewSettings #reminderList .list-row > div {
+  flex: 1 1 auto;
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+#viewSettings #reminderList .list-row strong {
+  display: block;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+#viewSettings #reminderList .list-row span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+#viewSettings #reminderList .list-row button {
+  flex: 0 0 auto;
+  min-height: 36px;
+  border: 1px solid var(--line);
+}
+#viewSettings #reminderList .empty { padding: 13px 0; }
+#viewSettings #reminderForm > * { min-width: 0; }
+@media (max-width:560px) {
+  #viewSettings .settings-account-panel { align-items: stretch; }
+  #viewSettings .settings-account-panel > div { flex-basis: 100%; }
+  #viewSettings #settingsLogoutBtn { width: 100%; }
+}
