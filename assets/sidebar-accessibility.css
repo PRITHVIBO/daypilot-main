@@ -1,0 +1,74 @@
+/* DayPilot: keep sign-out reachable regardless of browser height.
+   Keep the header and account footer stationary, and scroll only the menu. */
+@supports (height: 100dvh) {
+  .sidebar { height: 100dvh; max-height: 100dvh; }
+}
+.sidebar {
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar .side-brand,
+.sidebar .sidebar-profile { flex: 0 0 auto; }
+.sidebar .nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  align-content: start;
+  padding: 2px 2px 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #52675a transparent;
+}
+.sidebar-bottom {
+  flex: 0 0 auto;
+  margin-top: 0;
+  padding: 10px 0 max(8px, env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(255,255,255,.12);
+  background: #1e3028;
+}
+.sidebar-bottom #logoutBtn {
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 8px;
+  background: rgba(255,255,255,.08);
+  color: #eef4e9;
+  font-size: 12px;
+  font-weight: 600;
+}
+.sidebar-bottom #logoutBtn:hover { background: rgba(255,255,255,.16); }
+.sidebar-bottom #logoutBtn:focus-visible,
+#settingsLogoutBtn:focus-visible {
+  outline: 2px solid #d9a37e;
+  outline-offset: 2px;
+}
+.sidebar .mini-ai { min-width: 0; overflow: hidden; }
+.sidebar .mini-ai > div { min-width: 0; }
+.sidebar .mini-ai small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#settingsLogoutBtn { margin-top: 14px; width: 100%; min-height: 44px; }
+@media (max-height: 700px) and (min-width: 821px) {
+  .sidebar { padding-top: 12px; padding-bottom: 9px; }
+  .sidebar .side-brand { padding-bottom: 12px; }
+  .sidebar-profile { margin-bottom: 9px; }
+  .sidebar .nav-item { min-height: 36px; padding-block: 8px; }
+  .sidebar-bottom { padding-top: 7px; }
+  .sidebar .mini-ai { padding: 8px; }
+}
+@media (max-width: 820px) {
+  .sidebar { display: none; }
+  .mobile-nav { grid-template-columns: repeat(6, minmax(0,1fr)); }
+  .mobile-nav button { min-width: 0; }
+  .mobile-nav button small { font-size: clamp(8px, 1.9vw, 10px); }
+}
+@media (max-width: 360px) {
+  .mobile-nav { left: 5px; right: 5px; gap: 1px; padding: 5px 2px; }
+  .mobile-nav button { padding-inline: 0; }
+}
