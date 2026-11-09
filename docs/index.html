@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1e3028">
+<meta name="description" content="DayPilot 2.4 GitHub Pages preview: project dashboard, public repository status, tasks and work log.">
+<title>DayPilot 2.4 | GitHub Pages Preview</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#28362c;background:#f4f5ef;font-size:14px}
+*{box-sizing:border-box}
+body{margin:0}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit}
+.ribbon{background:#e4eada;color:#567050;display:flex;justify-content:center;align-items:center;gap:12px;text-align:center;padding:9px 16px;font-size:11px}
+.ribbon strong{color:#2d5a36}
+.shell{display:grid;grid-template-columns:222px minmax(0,1fr);min-height:calc(100vh - 34px);max-width:1600px;margin:auto}
+.sidebar{background:#1e3028;color:#dfe9da;padding:24px 13px;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:11px;font-size:20px;font-weight:750;letter-spacing:-.7px;margin:0 10px 36px}
+.mark{height:34px;width:34px;border-radius:9px;background:#dfebcf;color:#35513e;display:grid;place-items:center;font-size:25px}
+.brand small{font-size:10px;color:#abbfa9;font-weight:400}
+.profile{padding:15px;background:#ffffff0b;border:1px solid #ffffff12;border-radius:10px;margin:0 5px 25px;display:flex;align-items:center;gap:10px}
+.avatar{background:#dae7cb;color:#37543a;border-radius:7px;width:34px;height:34px;display:grid;place-items:center;font-weight:700}
+.profile b,.profile span{display:block}
+.profile b{font-size:12px}
+.profile span{font-size:10px;color:#b7c8b5;margin-top:5px}
+.navlabel{font-size:10px;letter-spacing:1.6px;color:#8ca48d;margin:0 12px 10px}
+.nav{display:grid;gap:4px}
+.nav button{border:0;border-radius:8px;color:#c4d1c2;background:transparent;padding:13px 15px;text-align:left;font-size:12px;display:flex;align-items:center;gap:11px;width:100%}
+.nav button:hover{background:#ffffff15}
+.nav button.active{background:#dce7cc;color:#213e2b;font-weight:700}
+.nav .ico{font-size:17px;width:19px;text-align:center}
+.sidefoot{margin-top:auto;padding:18px 10px 0;border-top:1px solid #ffffff18;color:#adbeaa;font-size:11px}
+.mainwrap{min-width:0}
+.topbar{padding:24px 35px;background:#f4f5ef;border-bottom:1px solid #dfe5d9;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.kicker{font-size:10px;color:#7e946e;letter-spacing:1.9px;font-weight:700}
+.topbar h1{font-size:27px;font-weight:550;letter-spacing:-1px;margin:9px 0 5px}
+.subtitle{font-size:12px;color:#879481;margin:0}
+.topactions{display:flex;align-items:center;gap:9px}
+.pill{font-size:11px;color:#597b55;background:#e6efdd;border-radius:6px;padding:9px 12px;white-space:nowrap}
+.main{padding:29px 35px 55px;display:grid;gap:23px;max-width:1250px}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:20px;background:#e3ead9;border:1px solid #d4dfc8;border-radius:16px;padding:29px 34px;overflow:hidden}
+.hero h2{font-size:36px;font-weight:550;letter-spacing:-1.5px;line-height:1.08;margin:13px 0}
+.hero p{line-height:1.7;font-size:12px;color:#74896f;margin:0 0 19px}
+.orbit{width:185px;height:185px;flex-shrink:0;border:1px solid #b5c6a6;border-radius:50%;display:grid;place-items:center;transform:rotate(-9deg);color:#81976c;font-size:29px;line-height:1.04;font-weight:650;letter-spacing:-1px;position:relative}
+.orbit em{font-family:Georgia,serif;color:white;font-weight:400}
+.orbit:after{position:absolute;content:"✳";font-size:92px;right:-28px;bottom:-11px;color:#d46c47}
+.btn{border:1px solid #d6e0cf;background:#f5f7f0;border-radius:7px;color:#456043;padding:10px 15px;font-size:12px;font-weight:550}
+.btn:hover{background:#e4ecdc}
+.btn.primary{border-color:#28422f;background:#28422f;color:white}
+.btn.primary:hover{background:#3c6045}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.stat,.panel,.track{background:#fffefa;border:1px solid #dfe5da;border-radius:11px}
+.stat{padding:20px 21px;border-top:2px solid #c2d0b6}
+.stat span,.stat small{display:block;font-size:11px;color:#7e907c}
+.stat strong{display:block;font-size:33px;font-weight:520;letter-spacing:-1.2px;margin:13px 0 8px}
+.stat small{font-size:10px;line-height:1.5}
+.twocol{display:grid;grid-template-columns:1.1fr 1fr;gap:18px}
+.panel{padding:23px}
+.panelhead{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:20px}
+.panel h3,.sectionhead h3{font-size:19px;font-weight:550;letter-spacing:-.6px;margin:8px 0 0}
+.eyebrow{font-size:9px;color:#7c946d;letter-spacing:1.5px;font-weight:700}
+.badge{font-size:10px;color:#5f7c53;background:#edf2e6;border-radius:5px;padding:6px 9px;white-space:nowrap}
+.sectionhead{display:flex;align-items:center;justify-content:space-between}
+.trackers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.track{padding:18px}
+.trackicon{display:grid;place-items:center;width:36px;height:36px;border-radius:8px;background:#eef1e8;color:var(--tc);font-family:Georgia,serif;font-size:17px}
+.track h4{font-size:15px;font-weight:550;margin:17px 0 5px}
+.track p{color:#8b9987;font-size:11px;margin:0}
+.tracknum{font-size:28px;letter-spacing:-1px;margin:26px 0 12px}
+.tracknum small{font-size:11px;color:#879984;letter-spacing:0}
+.bar{height:6px;background:#edf0e7;border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--tc)}
+.track .foot{font-size:10px;color:#83947b;margin-top:12px}
+.graph{width:100%;height:160px;display:block}
+.muted{font-size:11px;color:#80907b;line-height:1.7}
+.row{padding:13px 0;border-bottom:1px solid #e8ede3;display:flex;align-items:center;gap:12px}
+.row:last-child{border-bottom:0}
+.row .stretch{flex:1;min-width:0}
+.row strong,.row small{display:block}
+.row strong{font-weight:600;font-size:12px;overflow-wrap:anywhere}
+.row small{color:#899888;font-size:10px;margin-top:5px}
+.status{font-size:10px;border-radius:5px;padding:6px 8px;background:#eaf0e3;color:#627f53}
+.status.error{background:#faede3;color:#a7684b}
+.status.neutral{background:#f0f1ed;color:#788479}
+.notice{padding:16px 18px;background:#f5efe2;border:1px solid #e9dfc9;border-radius:8px;color:#8e7958;font-size:12px;line-height:1.7}
+.form{display:grid;gap:12px}
+.form input,.form select,.form textarea{width:100%;padding:12px 13px;border:1px solid #dbe3d6;border-radius:7px;background:white;color:#243a2b;outline:none}
+.form textarea{min-height:110px;resize:vertical}
+.form input:focus,.form select:focus,.form textarea:focus{border-color:#93ac88}
+.inlineform{display:flex;gap:9px}
+.inlineform input{flex:1}
+.checkbox{width:18px;height:18px;accent-color:#52734d;cursor:pointer}
+.taskdone strong{text-decoration:line-through;color:#91a28e}
+.empty{border:1px dashed #dbe5d6;border-radius:7px;padding:22px;color:#8a9a83;font-size:12px}
+.note{border-left:3px solid #b7c7aa;padding:5px 14px;margin:13px 0}
+.note h4{margin:0;font-size:13px}
+.note p{font-size:12px;line-height:1.7;color:#748773}
+.repo{display:grid;grid-template-columns:minmax(0,2fr) 1fr 1fr;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #e9ece6}
+.repo:last-child{border-bottom:0}
+.repo a{font-weight:600;font-size:12px;text-decoration:none;color:#365c3c;overflow-wrap:anywhere}
+.repo a:hover{text-decoration:underline}
+.repo small{display:block;font-size:10px;color:#879884;margin-top:6px}
+.repo span{font-size:11px;color:#728571}
+.footerlink{font-size:12px;color:#547a52;text-decoration:none}
+.footerlink:hover{text-decoration:underline}
+@media(max-width:1050px){.shell{grid-template-columns:185px minmax(0,1fr)}.topbar{padding:23px}.main{padding:22px}.trackers{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.shell{grid-template-columns:58px minmax(0,1fr)}.sidebar{padding:15px 6px}.brand{margin:0 5px 24px}.brand>span,.brand small,.profile,.navlabel,.sidefoot{display:none}.nav button{padding:13px 6px;font-size:0;justify-content:center}.nav .ico{font-size:19px}.topbar{padding:17px;align-items:flex-start}.topbar h1{font-size:21px}.subtitle{font-size:10px}.topactions{flex-direction:column;gap:5px}.main{padding:14px;gap:15px}.hero{padding:22px}.hero h2{font-size:27px}.orbit{width:90px;height:90px;font-size:14px;margin-right:-38px}.orbit:after{font-size:49px;right:-5px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{padding:14px}.stat strong{font-size:26px}.twocol{grid-template-columns:1fr}.panel{padding:17px}.trackers{gap:9px}.track{padding:13px}.track h4{font-size:13px}.tracknum{font-size:23px}.repo{grid-template-columns:1fr auto}.repo span:last-child{grid-column:1/-1}.inlineform{flex-wrap:wrap}.inlineform button{width:100%}.ribbon{font-size:10px}}
+</style>
+</head>
+<body>
+<div class="ribbon"><strong>GITHUB PAGES PREVIEW</strong><span>Public GitHub data is live when available. Tasks and work logs stay in this browser. PHP/MySQL features need Hostinger.</span></div>
+<div class="shell">
+<aside class="sidebar">
+ <div class="brand"><div class="mark">✳</div><span>DayPilot</span><small>2.4</small></div>
+ <div class="profile"><div class="avatar">D</div><div><b>DayPilot workspace</b><span>Public preview mode</span></div></div>
+ <div class="navlabel">WORKSPACE</div>
+ <nav class="nav" id="nav">
+ <button data-tab="overview" class="active"><span class="ico">◈</span> Overview</button>
+ <button data-tab="today"><span class="ico">⌂</span> Today</button>
+ <button data-tab="tasks"><span class="ico">✓</span> Tasks</button>
+ <button data-tab="memory"><span class="ico">✦</span> Memory</button>
+ <button data-tab="insights"><span class="ico">◒</span> Insights</button>
+ <button data-tab="connections"><span class="ico">↗</span> Connections</button>
+ </nav>
+ <div class="sidefoot">● Static preview active<br><br>Real PHP application:<br><a href="https://projects.bhavyagupta.space" target="_blank" rel="noopener">Hostinger deployment ↗</a></div>
+</aside>
+<div class="mainwrap">
+<header class="topbar">
+<div><div id="section-kicker" class="kicker">OVERVIEW</div><h1 id="section-title">Your work, connected.</h1><p class="subtitle" id="section-subtitle">A clear picture of your projects, practice and next actions.</p></div>
+<div class="topactions"><span class="pill">● Preview mode</span><button class="btn primary" data-tab="tasks">+ Task</button></div>
+</header>
+<main class="main" id="content"></main>
+</div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const repoNames=['daypilot-main','daypilot','DayPilot-2.0'];
+const trackerDefs=[['dsa','DSA Intelligencia','Patterns into practice','{ }','#d66c43'],['sql','QueryQuest','Queries, understood','▤','#788ab4'],['web','StackForge','Ideas into interfaces','</>','#819d79'],['cloud','CloudLab','From local to live','☁','#ab96bb']];
+const heads={overview:['OVERVIEW','Your work, connected.','A clear picture of projects, practice and next actions.'],today:['TODAY','Your work, remembered.','Capture what happened and choose what comes next.'],tasks:['TASKS','Keep the work moving.','Your locally saved preview task list.'],memory:['MEMORY','Remember your progress.','A personal timeline saved only on this device.'],insights:['INSIGHTS','Patterns in your progress.','An honest view of local demo data and GitHub activity.'],connections:['CONNECTIONS','Your sources, clearly labeled.','Live public GitHub data and planned learning tracker integrations.']};
+const defaults=[{id:1,title:'Verify DayPilot 2.4 on Hostinger',done:false,priority:'High'},{id:2,title:'Connect GitHub project watchlist',done:false,priority:'High'},{id:3,title:'Review learning tracker connectors',done:true,priority:'Medium'}];
+const read=(key,fallback)=>{try{const val=JSON.parse(localStorage.getItem(key));return val===null?fallback:val}catch(e){return fallback}};
+let tasks=read('daypilot_pages_preview_tasks',defaults);
+let logs=read('daypilot_pages_preview_logs',[]);
+let tab='overview';
+let github={state:'loading',repos:{},commits:[],error:''};
+const esc=str=>String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;':'&quot;',"'":'&#39;'}[c]));
+const persist=()=>{try{localStorage.setItem('daypilot_pages_preview_tasks',JSON.stringify(tasks));localStorage.setItem('daypilot_pages_preview_logs',JSON.stringify(logs))}catch(e){}};
+const btn=(label,to)=>'<button class="btn" data-tab="'+to+'">'+label+'</button>';
+function panel(title,eyebrow,body,badge){
+ return '<section class="panel"><div class="panelhead"><div><div class="eyebrow">'+eyebrow+'</div><h3>'+title+'</h3></div>'+(badge?'<span class="badge">'+badge+'</span>':'')+'</div>'+body+'</section>';
+}
+function stat(title,n,desc){return '<div class="stat"><span>'+title+'</span><strong>'+n+'</strong><small>'+desc+'</small></div>'}
+function chart(vals){
+ const w=550,h=166,p=18,m=Math.max(1,...vals),step=(w-2*p)/Math.max(1,vals.length-1);
+ const dots=vals.map((v,i)=>[p+i*step,h-p-(v/m)*(h-2*p)]);
+ return '<svg class="graph" viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Commit counts across 14 days"><g stroke="#e5eadd" stroke-dasharray="4 5"><path d="M18 18 H532 M18 83 H532 M18 148 H532"/></g><polyline fill="none" stroke="#d66c43" stroke-width="3" stroke-linejoin="round" points="'+dots.map(v=>v.join(',')).join(' ')+'"/>'+dots.map(v=>'<circle cx="'+v[0]+'" cy="'+v[1]+'" r="3.2" fill="#d66c43"/>').join('')+'<text x="18" y="162" font-size="10" fill="#7c8d75">14 days ago</text><text x="532" y="162" text-anchor="end" font-size="10" fill="#7c8d75">Today (UTC)</text></svg>';
+}
+function taskRows(){
+ return tasks.length?tasks.map(t=>'<div class="row '+(t.done?'taskdone':'')+'"><input type="checkbox" class="checkbox" data-check="'+t.id+'" '+(t.done?'checked':'')+' aria-label="Mark task complete"><div class="stretch"><strong>'+esc(t.title)+'</strong><small>'+esc(t.priority)+' priority</small></div><span class="status '+(t.done?'':'neutral')+'">'+(t.done?'Done':'Open')+'</span><button class="btn" data-remove="'+t.id+'" aria-label="Delete task">×</button></div>').join(''):'<div class="empty">No tasks. Add the first one below.</div>';
+}
+function repoRows(){
+ return repoNames.map(name=>{
+ const r=github.repos[name];
+ if(!r)return '<div class="repo"><div><a href="https://github.com/PRITHVIBO/'+name+'" target="_blank" rel="noopener">'+name+' ↗</a><small>Public GitHub repository</small></div><span>—</span><span class="status neutral">'+(github.state==='loading'?'Loading…':'Unavailable')+'</span></div>';
+ return '<div class="repo"><div><a href="'+esc(r.html_url)+'" target="_blank" rel="noopener">'+esc(name)+' ↗</a><small>'+esc(r.language||'Language not set')+' · updated '+new Date(r.pushed_at).toLocaleDateString()+'</small></div><span>'+r.open_issues_count+' open issues / PRs</span><span class="status">Public API ✓</span></div>';
+ }).join('');
+}
+function overview(){
+ const num=Object.keys(github.repos).length,commits=github.commits.length;
+ return '<section class="hero"><div><div class="eyebrow">DAYPILOT / YOUR WORK, CONNECTED</div><h2>A clear view of<br>what’s moving forward.</h2><p>Your projects, practice and next actions.<br>One place to pick up the thread.</p>'+btn('View connections ↗','connections')+' '+btn('Open tasks','tasks')+'</div><div class="orbit">BUILD<br><em>LEARN.</em><br>REPEAT.</div></section>'+
+ '<div class="stats">'+stat('Public repositories',github.state==='loading'?'…':num,'Fetched from GitHub API')+stat('Commits (14 days)',github.state==='loading'?'…':github.commits.length?commits:'—','Default branch of daypilot-main')+stat('Tasks completed',tasks.filter(x=>x.done).length,'Local preview data')+stat('Open DayPilot tasks',tasks.filter(x=>!x.done).length,'Local preview data')+'</div>'+
+ '<div class="twocol">'+panel('Small commits. Steady movement.','REPOSITORY ACTIVITY',github.commits.length?chart(commitValues()):'<div class="empty">'+(github.state==='loading'?'Loading public commit history…':'No public commit history available for the last 14 days.')+'</div>'+'<p class="muted">Public daypilot-main default-branch commits, previous 14 UTC days, up to 100 API results. Not a measure of work time.</p>','GitHub / live when available')+
+ panel('Your next actions.','TASK QUEUE',taskRows()+btn('Manage tasks ↗','tasks'),'Local preview')+'</div>'+
+ '<div class="sectionhead"><div><div class="eyebrow">YOUR LEARNING DESK</div><h3>Four trackers. One view.</h3></div>'+btn('Connect sources ↗','connections')+'</div>'+
+ '<div class="trackers">'+trackerDefs.map(t=>'<article class="track" style="--tc:'+t[4]+'"><span class="trackicon">'+esc(t[3])+'</span><h4>'+t[1]+'</h4><p>'+t[2]+'</p><div class="tracknum">— <small>/ not synced</small></div><div class="bar"><i style="width:0%"></i></div><div class="foot">Requires Hostinger connector</div></article>').join('')+'</div>'+
+ panel('Public repository health','PROJECT HEALTH',repoRows()+'<p class="muted">GitHub metadata updates on refresh. Actions tests and real build status should be checked in the GitHub Actions tab.</p>','No login required')+
+ '<div class="notice">This is a standalone static preview. The full DayPilot PHP application, authentication, database, AI integration and scheduled reminders run on Hostinger, not GitHub Pages.</div>';
+}
+function commitValues(){
+ const out=Array(14).fill(0),now=new Date();
+ for(const c of github.commits){const date=new Date(c.commit.author.date);const index=13-Math.floor((Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate())-Date.UTC(date.getUTCFullYear(),date.getUTCMonth(),date.getUTCDate()))/86400000);if(index>=0&&index<14)out[index]++}
+ return out;
+}
+function tasksPage(){
+ return panel('Create a task','TASK MANAGEMENT','<form class="form" data-form="task"><input name="title" placeholder="What needs doing?" maxlength="180" required><select name="priority"><option>Medium</option><option>High</option><option>Low</option></select><button class="btn primary" type="submit">Add task</button></form>')+
+ panel('Task queue','PERSONAL WORK',taskRows(),'Locally saved')+
+ '<div class="notice">These tasks are saved in your browser localStorage. They are not synchronized to your DayPilot account or shared with Hostinger.</div>';
+}
+function today(){
+ return '<section class="hero"><div><div class="eyebrow">DAILY INTELLIGENCE</div><h2>What did you<br>work on today?</h2><p>Turn an unstructured day into remembered progress.</p>'+btn('Open memory ↗','memory')+'</div><div class="orbit">PLAN<br><em>DO.</em><br>REVIEW.</div></section>'+
+ '<div class="stats">'+stat('Open tasks',tasks.filter(x=>!x.done).length,'Local')+stat('Completed',tasks.filter(x=>x.done).length,'Local')+stat('Work logs',logs.length,'Local')+stat('Connections','Public','GitHub data only')+'</div>'+
+ '<div class="twocol">'+panel("Today's focus",'TASKS',taskRows())+panel('Brain dump','CAPTURE','<form class="form" data-form="log"><input name="title" placeholder="e.g. Fixed PHP integration" maxlength="120" required><textarea name="text" placeholder="What happened? What is blocked? What happens next?" maxlength="2000" required></textarea><button class="btn primary">Save update locally</button></form>')+'</div>';
+}
+function memoryPage(){
+ return panel('Recent work updates','PERSONAL TIMELINE',logs.length?logs.map(l=>'<div class="note"><h4>'+esc(l.title)+'</h4><p>'+esc(l.text)+'</p><small class="muted">'+new Date(l.at).toLocaleString()+'</small></div>').join(''):'<div class="empty">No logs yet. Go to Today to capture your work.</div>',logs.length+' local entries')+
+ '<div class="notice">Full DayPilot includes MySQL-backed work memory and optional semantic search. This static preview does not provide RAG or AI inference.</div>';
+}
+function insights(){
+ const values=commitValues();
+ return '<div class="stats">'+stat('Open tasks',tasks.filter(x=>!x.done).length,'Local preview')+stat('Done tasks',tasks.filter(x=>x.done).length,'Local preview')+stat('Work logs',logs.length,'Local preview')+stat('Tracked repositories',Object.keys(github.repos).length,'Public API')+'</div>'+
+ panel('Default-branch commits','GITHUB ACTIVITY',github.commits.length?chart(values):'<div class="empty">No recent commit data available.</div>','14 days / UTC')+
+ panel('Interpreting your dashboard','DATA QUALITY','<p class="muted">Commit counts measure a subset of default-branch activity, not productivity or time spent. Learning history needs a real tracker connection. Tasks and work logs on this page are only browser-local demonstrations.</p>');
+}
+function connections(){
+ return '<div class="notice">Public GitHub metadata is fetched directly by your browser. Private repository access, PHP API calls and tracker ingestion are not available on GitHub Pages.</div>'+
+ panel('GitHub watchlist','01 / PUBLIC REPOS',repoRows()+'<div style="margin-top:14px"><button class="btn primary" id="refresh-gh">Refresh GitHub</button> <a class="footerlink" target="_blank" rel="noopener" href="https://github.com/PRITHVIBO/daypilot-main">Open source ↗</a></div>','No token used')+
+ panel('Learning trackers','02 / BACKEND REQUIRED',trackerDefs.map(t=>'<div class="row"><span class="trackicon" style="--tc:'+t[4]+'">'+esc(t[3])+'</span><div class="stretch"><strong>'+t[1]+'</strong><small>'+t[2]+'</small></div><span class="status neutral">Not connected</span></div>').join('')+'<p class="muted">For the real application, use the tracker connector, token-based summary ingestion, PHP cron and MySQL schema described in CONNECTED-DASHBOARD.md.</p>','Hostinger needed')+
+ panel('Production app','HOSTINGER','<p class="muted">Open your authenticated DayPilot installation to access live task, note and project synchronization, AI memory and reminders.</p><a class="btn primary" style="display:inline-block;text-decoration:none" href="https://projects.bhavyagupta.space" target="_blank" rel="noopener">Open Hostinger version ↗</a>');
+}
+const pages={overview,today,tasks:tasksPage,memory:memoryPage,insights,connections};
+function render(){
+ const h=heads[tab];$('section-kicker').textContent=h[0];$('section-title').textContent=h[1];$('section-subtitle').textContent=h[2];
+ $('content').innerHTML=pages[tab]();
+ document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab&&x.closest('.nav')));
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.tab){tab=b.dataset.tab;render();return}
+ if(b.dataset.remove){tasks=tasks.filter(x=>x.id!==Number(b.dataset.remove));persist();render();return}
+ if(b.id==='refresh-gh'){loadGitHub();return}
+});
+document.addEventListener('change',e=>{
+ const input=e.target.closest('input[data-check]');if(!input)return;
+ const t=tasks.find(x=>x.id===Number(input.dataset.check));if(t){t.done=input.checked;persist();render()}
+});
+document.addEventListener('submit',e=>{
+ const f=e.target.closest('form[data-form]');if(!f)return;e.preventDefault();const fd=new FormData(f);
+ if(f.dataset.form==='task'){const title=String(fd.get('title')||'').trim();if(title){tasks.unshift({id:Date.now(),title:title,priority:String(fd.get('priority')||'Medium'),done:false});persist();render()}}
+ if(f.dataset.form==='log'){const title=String(fd.get('title')||'').trim(),text=String(fd.get('text')||'').trim();if(title&&text){logs.unshift({title,text,at:new Date().toISOString()});persist();tab='memory';render()}}
+});
+async function loadGitHub(){
+ github={state:'loading',repos:{},commits:[],error:''};render();
+ const api='https://api.github.com/repos/PRITHVIBO/';
+ const since=new Date(Date.now()-14*86400000).toISOString();
+ try{
+ const results=await Promise.all(repoNames.map(async name=>{
+   const response=await fetch(api+encodeURIComponent(name),{headers:{Accept:'application/vnd.github+json'}});
+   if(!response.ok)throw new Error('GitHub API HTTP '+response.status);
+   return [name,await response.json()];
+ }));
+ results.forEach(x=>github.repos[x[0]]=x[1]);
+ try{const commits=await fetch(api+'daypilot-main/commits?per_page=100&since='+encodeURIComponent(since),{headers:{Accept:'application/vnd.github+json'}});if(commits.ok){const items=await commits.json();github.commits=Array.isArray(items)?items:[]}}catch(e){}
+ github.state='ready';
+ }catch(e){github.state='failed';github.error=String(e.message||e)}
+ render();
+}
+render();loadGitHub();
+})();
+</script>
+</body>
+</html>
