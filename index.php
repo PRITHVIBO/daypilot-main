@@ -10,6 +10,7 @@
 <title>DayPilot — Work Memory & AI Assistant</title>
 <link rel="stylesheet" href="assets/styles.css?v=2.4.0">
 <link rel="stylesheet" href="assets/control-center.css?v=2.4.0">
+<link rel="stylesheet" href="assets/responsive-hub.css?v=2.4.1">
 </head>
 <body>
 <div id="app">
@@ -148,5 +149,6 @@
 </div>
 <script src="assets/app.js?v=2.4.0" defer></script>
 <script src="assets/connections.js?v=2.4.0" defer></script>
+<script src="assets/repository-catalog.js?v=2.4.1" defer></script>
 </body>
 </html>
