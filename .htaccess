@@ -6,3 +6,6 @@ Options -Indexes
 <FilesMatch "^\.(env|git|htaccess)">
   Require all denied
 </FilesMatch>
+
+# Preserve scoped connector authorization through Apache/PHP.
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1

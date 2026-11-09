@@ -104,3 +104,68 @@ CREATE TABLE IF NOT EXISTS activity_log (
   INDEX idx_activity_user_time (user_id,created_at),
   CONSTRAINT fk_activity_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- DayPilot v2: personal work memory / RAG / projects.
+-- Additive migration: safe to run against an existing DayPilot database.
+
+CREATE TABLE IF NOT EXISTS projects (
+  id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  name VARCHAR(180) NOT NULL,
+  description TEXT NULL,
+  status ENUM('active','completed','archived') NOT NULL DEFAULT 'active',
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  INDEX idx_projects_user_status (user_id,status),
+  INDEX idx_projects_user_updated (user_id,updated_at),
+  CONSTRAINT fk_projects_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS work_logs (
+  id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  project_id CHAR(36) NULL,
+  title VARCHAR(255) NOT NULL,
+  content LONGTEXT NOT NULL,
+  kind ENUM('work_log','brain_dump','blocker','decision','learning','daily_summary') NOT NULL DEFAULT 'work_log',
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  INDEX idx_work_logs_user_time (user_id,created_at),
+  INDEX idx_work_logs_user_project (user_id,project_id),
+  CONSTRAINT fk_work_logs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_work_logs_project FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS daily_reviews (
+  id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  review_date DATE NOT NULL,
+  content LONGTEXT NOT NULL,
+  generated_by VARCHAR(80) NOT NULL DEFAULT 'local',
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  UNIQUE KEY uniq_daily_review (user_id,review_date),
+  INDEX idx_daily_reviews_user_date (user_id,review_date),
+  CONSTRAINT fk_daily_reviews_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS memory_chunks (
+  id CHAR(36) PRIMARY KEY,
+  user_id CHAR(36) NOT NULL,
+  source_type VARCHAR(40) NOT NULL,
+  source_id CHAR(36) NOT NULL,
+  project_id CHAR(36) NULL,
+  chunk_index INT NOT NULL DEFAULT 0,
+  content TEXT NOT NULL,
+  embedding_json LONGTEXT NULL,
+  embedding_model VARCHAR(80) NULL,
+  embedding_hash CHAR(64) NULL,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  UNIQUE KEY uniq_memory_source (user_id,source_type,source_id,chunk_index),
+  INDEX idx_memory_user_updated (user_id,updated_at),
+  INDEX idx_memory_user_project (user_id,project_id),
+  INDEX idx_memory_source (user_id,source_type),
+  CONSTRAINT fk_memory_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_memory_project FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

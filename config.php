@@ -17,6 +17,13 @@ return [
         'charset' => 'utf8mb4',
     ],
     'ai' => [
+        'openrouter' => [
+            'api_key' => getenv('OPENROUTER_API_KEY') ?: '',
+            'models' => ['openrouter/free'],
+            'site_url' => getenv('OPENROUTER_SITE_URL') ?: 'https://projects.bhavyagupta.space',
+            'app_name' => 'DayPilot',
+        ],
+        'rag' => ['semantic_queries' => false, 'max_chunks' => 8],
         'provider' => getenv('AI_PROVIDER') ?: 'gemini',
         'api_key' => getenv('GEMINI_API_KEY') ?: '',
         'model' => getenv('GEMINI_MODEL') ?: 'gemini-3.8-flash',
