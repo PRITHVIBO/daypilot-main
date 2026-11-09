@@ -1,0 +1,49 @@
+name: Connected dashboard tests
+on:
+  push:
+  pull_request:
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root-test-only
+          MYSQL_DATABASE: daypilot
+          MYSQL_USER: daypilot
+          MYSQL_PASSWORD: test-pass
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      DB_HOST: 127.0.0.1
+      DB_NAME: daypilot
+      DB_USER: daypilot
+      DB_PASS: test-pass
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql,curl,openssl,mbstring
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate PHP and JavaScript
+        run: |
+          find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
+          find assets -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Tracker summaries and private-field exclusion
+        run: node --test tests/*.test.js
+      - name: PHP validation and alert rules
+        run: php tests/connections-unit.php
+      - name: Initialize disposable database
+        env:
+          DAYPILOT_UPGRADE_TEST: '1'
+        run: php tests/upgrade-existing.php
+      - name: Authenticated API and token isolation
+        run: python3 tests/connections-http.py
