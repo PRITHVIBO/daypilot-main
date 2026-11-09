@@ -32,12 +32,34 @@ function connections_snapshot(string $uid,string $source,array $payload,string $
     $q->execute([$uid,$source,$day,json_encode($payload,JSON_THROW_ON_ERROR),$captured,$stamp]);
 }
 function connections_github(string $path): array {
-    if(!preg_match('~^/repos/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:/commits|/actions/runs)?(?:\?.*)?$~',$path))throw new RuntimeException('Unsupported GitHub resource.');
+    if(!preg_match('~^(?:/repos/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:/commits|/actions/runs)?(?:\?.*)?|/users/[A-Za-z0-9-]{1,39}/repos\?per_page=100&sort=updated)$~',$path))throw new RuntimeException('Unsupported GitHub resource.');
     if(!function_exists('curl_init'))throw new RuntimeException('The server needs the PHP cURL extension for GitHub sync.');
     $h=curl_init('https://api.github.com'.$path);curl_setopt_array($h,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_FOLLOWLOCATION=>false,CURLOPT_CONNECTTIMEOUT=>4,CURLOPT_TIMEOUT=>8,CURLOPT_HTTPHEADER=>['Accept: application/vnd.github+json','X-GitHub-Api-Version: 2022-11-28','User-Agent: DayPilot-Connections']]);
     $body=curl_exec($h);$status=(int)curl_getinfo($h,CURLINFO_RESPONSE_CODE);curl_close($h);
     if($body===false||$status!==200)throw new RuntimeException($status===403||$status===429?'GitHub rate limit or access restriction. Saved data is retained.':'GitHub request failed (HTTP '.$status.'). Saved data is retained.');
     $data=json_decode($body,true,512,JSON_THROW_ON_ERROR);if(!is_array($data))throw new RuntimeException('Invalid GitHub response.');return $data;
+}
+function connections_public_catalog(string $uid): array {
+    // Public GitHub discovery is separate from the eight-repository monitoring watchlist.
+    // Never return private repositories, credentials, or data from the authenticated ChatGPT connector.
+    $settings=connections_settings($uid);
+    $owner=(string)($settings['owner']??'');
+    if(!preg_match('/^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,38})$/',$owner))throw new InvalidArgumentException('Invalid public GitHub owner.');
+    $rows=connections_github('/users/'.$owner.'/repos?per_page=100&sort=updated');
+    $catalog=[];
+    foreach($rows as $row) {
+        if(!is_array($row)||!empty($row['private'])||empty($row['name'])||empty($row['html_url']))continue;
+        $catalog[]=[
+            'name'=>(string)$row['name'],
+            'description'=>mb_substr((string)($row['description']??''),0,240),
+            'url'=>(string)$row['html_url'],
+            'language'=>isset($row['language'])?(string)$row['language']:null,
+            'pushed_at'=>isset($row['pushed_at'])?(string)$row['pushed_at']:null,
+            'archived'=>!empty($row['archived']),
+            'fork'=>!empty($row['fork'])
+        ];
+    }
+    return ['owner'=>$owner,'repositories'=>$catalog,'public_only'=>true,'limit'=>100,'truncated'=>count($rows)===100];
 }
 function connections_needs_alert(array $run): bool {
     $updated=strtotime((string)($run['updated_at']??''));
@@ -88,6 +110,7 @@ function connections_dispatch(string $action,string $method,string $uid): void {
     if(!str_starts_with($action,'connections_'))return;
     connections_schema();
     if($action==='connections_overview'&&$method==='GET')json_response(connections_overview($uid));
+    if($action==='connections_discover'&&$method==='GET')json_response(connections_public_catalog($uid));
     if($method!=='POST')json_response(['error'=>'Method not allowed'],405);
     $in=input_json();
     try{
