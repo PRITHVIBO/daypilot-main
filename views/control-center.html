@@ -5,6 +5,17 @@
   <section class="control-grid"><article class="panel"><div class="panel-head"><div><div class="eyebrow">REPOSITORY ACTIVITY</div><h2>Small commits. Steady movement.</h2></div><span class="chip">30 days / UTC</span></div><div id="controlCommitChart" class="control-chart"></div><p class="control-caption">Default-branch commits, up to 100 per repository. Commit counts do not measure coding time or project completion.</p></article><article class="panel"><div class="panel-head"><div><div class="eyebrow">LEARNING PROGRESS</div><h2>The practice adds up.</h2></div><span class="chip">Daily snapshots</span></div><div id="controlLearningChart" class="control-chart"></div><p class="control-caption">Completed totals recorded when a tracker sends a summary. History starts after connecting; past study activity is not invented.</p></article></section>
   <section class="control-section"><div class="control-section-head"><div><div class="eyebrow">YOUR LEARNING DESK</div><h2>Four trackers. One view.</h2></div><button class="tiny" data-view="connections">Connect a tracker ↗</button></div><div id="controlTrackers" class="tracker-grid"></div></section>
   <section class="panel"><div class="panel-head"><div><div class="eyebrow">PROJECT HEALTH</div><h2>What changed. What needs attention.</h2></div><button id="controlRefresh" class="secondary small">Refresh GitHub ↻</button></div><div id="controlRepositories"></div></section>
+  <section class="panel" id="repoCatalogPanel" aria-labelledby="repoCatalogTitle">
+    <div class="panel-head"><div><div class="eyebrow">REPOSITORY LIBRARY / PUBLIC GITHUB</div><h2 id="repoCatalogTitle">Explore your GitHub projects</h2></div><span class="chip" id="repoCatalogCount">Not loaded</span></div>
+    <p class="repo-catalog-help">Discover public repositories directly from your configured GitHub owner. Add relevant repositories to your existing watchlist (maximum eight), then save the connection settings. Private repositories require a separate authenticated integration.</p>
+    <div class="repo-catalog-tools">
+      <input id="repoCatalogSearch" type="search" placeholder="Search repositories by name or language" aria-label="Search GitHub repositories">
+      <select id="repoCatalogSort" aria-label="Sort GitHub repositories"><option value="recent">Recently updated</option><option value="name">Name A–Z</option></select>
+      <button class="secondary small" id="repoCatalogReload" type="button">Refresh catalog</button>
+    </div>
+    <div id="repoCatalogStatus" class="repo-catalog-help" role="status">Open Overview to discover public repositories.</div>
+    <div id="repoCatalogResults" class="repo-catalog-grid"></div>
+  </section>
   <section class="panel"><div class="panel-head"><div><div class="eyebrow">PROJECT WORKSPACE</div><h2>Keep your own builds moving.</h2></div><button id="controlNewProject" class="primary small">+ Project</button></div><div id="controlProjectList" class="managed-project-grid"></div></section>
   <section class="control-grid"><article class="panel"><div class="panel-head"><div><div class="eyebrow">NEXT ACTIONS</div><h2>Make room for the next useful thing.</h2></div><button class="tiny" data-view="tasks">All tasks ↗</button></div><div id="controlTaskBoard" class="control-task-board"></div></article><article class="panel"><div class="panel-head"><div><div class="eyebrow">ATTENTION DESK</div><h2>Keep the important things visible.</h2></div><span class="chip">Recorded alerts</span></div><div id="controlAlerts"></div></article></section>
 </div>
